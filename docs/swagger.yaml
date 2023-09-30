@@ -1,0 +1,281 @@
+basePath: /v1
+definitions:
+  entity.Client:
+    properties:
+      id:
+        type: integer
+      mobile_operator_code:
+        type: integer
+      phone_number:
+        type: integer
+      tag:
+        type: string
+      time_zone:
+        type: integer
+    type: object
+  entity.Mailing:
+    properties:
+      datetime_end:
+        type: string
+      datetime_start:
+        type: string
+      filter_choice:
+        type: string
+      id:
+        type: integer
+      interval_end:
+        type: string
+      interval_start:
+        type: string
+      message_text:
+        type: string
+      mobile_operator_code:
+        type: string
+      tag:
+        type: string
+    type: object
+  entity.MailingStats:
+    properties:
+      datetime_end:
+        type: string
+      datetime_start:
+        type: string
+      failed:
+        description: About Messages DeliveryStatus atribute
+        type: integer
+      mailing_id:
+        type: integer
+      succesed:
+        description: About Messages DeliveryStatus atribute
+        type: integer
+    type: object
+  entity.Message:
+    properties:
+      client_id:
+        type: integer
+      date_time_creation:
+        type: string
+      delivery_status:
+        type: boolean
+      id:
+        type: integer
+      mailing_id:
+        type: integer
+      try:
+        type: integer
+    type: object
+  v1.errorResponse:
+    properties:
+      error_msg:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: nick.kaliga@ya.ru
+    name: Nikolai Kaliga
+  description: Closed API
+  title: Go Mailing Service
+  version: "1.0"
+paths:
+  /client:
+    delete:
+      consumes:
+      - application/json
+      description: Delete client from db.
+      operationId: deleteClient
+      parameters:
+      - description: Client object to delete
+        in: body
+        name: client
+        required: true
+        schema:
+          $ref: '#/definitions/entity.Client'
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: Client deleted successfully
+        "400":
+          description: Bad request, invalid JSON data
+        "500":
+          description: Internal server error, failed to delete client
+      summary: Delete existing client
+      tags:
+      - clients
+    patch:
+      consumes:
+      - application/json
+      description: Update client in db.
+      operationId: updateClient
+      parameters:
+      - description: Client object to update
+        in: body
+        name: client
+        required: true
+        schema:
+          $ref: '#/definitions/entity.Client'
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: Client updated successfully
+        "400":
+          description: Bad request, invalid JSON data
+        "500":
+          description: Internal server error, failed to update client
+      summary: Update existing client
+      tags:
+      - clients
+    put:
+      consumes:
+      - application/json
+      description: Create new client entity.
+      operationId: createClient
+      parameters:
+      - description: Client object to create
+        in: body
+        name: client
+        required: true
+        schema:
+          $ref: '#/definitions/entity.Client'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Client created successfully
+        "400":
+          description: Bad request, invalid JSON data
+        "500":
+          description: Internal server error, failed to create a client
+      summary: Create a new client
+      tags:
+      - clients
+  /mailing:
+    delete:
+      consumes:
+      - application/json
+      description: Delete mailing from db.
+      operationId: deleteMailing
+      parameters:
+      - description: Mailing object to delete
+        in: body
+        name: mailing
+        required: true
+        schema:
+          $ref: '#/definitions/entity.Mailing'
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: Mailing deleted successfully
+        "400":
+          description: Bad request, invalid JSON data
+        "500":
+          description: Internal server error, failed to delete mailing
+      summary: Delete existing mailing
+      tags:
+      - mailings
+    patch:
+      consumes:
+      - application/json
+      description: Update mailing in db.
+      operationId: updateMailing
+      parameters:
+      - description: Mailing object to update
+        in: body
+        name: mailing
+        required: true
+        schema:
+          $ref: '#/definitions/entity.Mailing'
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: Mailing updated successfully
+        "400":
+          description: Bad request, invalid JSON data
+        "500":
+          description: Internal server error, failed to update mailing
+      summary: Update existing mailing
+      tags:
+      - mailings
+    post:
+      consumes:
+      - application/json
+      description: Get Messages by existing mailing.
+      operationId: getMessagesByMailing
+      parameters:
+      - description: Mailing object to select Messages by mailing's filters
+        in: body
+        name: mailing
+        required: true
+        schema:
+          $ref: '#/definitions/entity.Mailing'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Messages catched successfully
+          schema:
+            items:
+              $ref: '#/definitions/entity.Message'
+            type: array
+        "400":
+          description: Bad request, invalid JSON data
+          schema:
+            $ref: '#/definitions/v1.errorResponse'
+        "500":
+          description: Internal server error, failed to catch messages
+          schema:
+            $ref: '#/definitions/v1.errorResponse'
+      summary: Post with Mailing
+      tags:
+      - mailings
+    put:
+      consumes:
+      - application/json
+      description: Create a new mailing.
+      operationId: createMailing
+      parameters:
+      - description: Mailing object to create
+        in: body
+        name: mailing
+        required: true
+        schema:
+          $ref: '#/definitions/entity.Mailing'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Mailing created successfully
+        "400":
+          description: Bad request, invalid JSON data
+        "500":
+          description: Internal server error, failed to create mailing
+      summary: Create a mailing
+      tags:
+      - mailings
+  /mailing/stats:
+    get:
+      consumes:
+      - application/json
+      description: Get MailingStats about all Mailings.
+      operationId: getStats
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: MailingStats received
+          schema:
+            items:
+              $ref: '#/definitions/entity.MailingStats'
+            type: array
+        "500":
+          description: Internal server error, failed to receive stats
+          schema:
+            $ref: '#/definitions/v1.errorResponse'
+      summary: Get MailingStats
+      tags:
+      - mailings
+swagger: "2.0"
