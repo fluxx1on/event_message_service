@@ -22,7 +22,7 @@ type ColorfulHandler struct {
 
 func NewColorfulHandler(out, journal io.Writer, opts *slog.HandlerOptions) *ColorfulHandler {
 	h := &ColorfulHandler{
-		Handler:    slog.NewJSONHandler(out, opts),
+		Handler:    slog.NewTextHandler(out, opts),
 		logger:     log.New(out, "", 0),
 		logJournal: log.New(journal, "", 0),
 	}
@@ -47,8 +47,15 @@ func (h *ColorfulHandler) Handle(_ context.Context, r slog.Record) error {
 	fields := make(map[string]interface{}, r.NumAttrs())
 
 	r.Attrs(func(a slog.Attr) bool {
-		fields[a.Key] = a.Value.Any()
-
+		if a.Value.Kind() == slog.KindGroup {
+			nestedFields := map[string]interface{}{}
+			for _, subAttr := range a.Value.Group() {
+				nestedFields[subAttr.Key] = subAttr.Value.Any()
+			}
+			fields[a.Key] = nestedFields
+		} else {
+			fields[a.Key] = a.Value.Any()
+		}
 		return true
 	})
 
@@ -58,7 +65,6 @@ func (h *ColorfulHandler) Handle(_ context.Context, r slog.Record) error {
 
 	var b []byte
 	var err error
-
 	if len(fields) > 0 {
 		b, err = json.MarshalIndent(fields, "", "  ")
 		if err != nil {

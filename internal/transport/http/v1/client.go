@@ -55,8 +55,14 @@ func (r *clientRoutes) Add(c *gin.Context) {
 		slog.Info("Client creation failed",
 			slog.Int("Status code", http.StatusInternalServerError),
 			slog.String("ErrorMsg", err.Error()),
-			slog.Group("Client", client.PhoneNumber, client.MobileOperator,
-				client.Tag, client.TimeZone))
+			slog.Group("Client",
+				slog.Int64("PhoneNumber", client.PhoneNumber),
+				slog.Int("MobileOperator", client.MobileOperator),
+				slog.String("Tag", client.Tag),
+				slog.Int("TimeZone", client.TimeZone),
+			),
+		)
+
 		c.AbortWithStatus(http.StatusInternalServerError)
 		pushMetric(http.MethodPut, clientPath, http.StatusInternalServerError)
 		return
@@ -64,8 +70,14 @@ func (r *clientRoutes) Add(c *gin.Context) {
 
 	slog.Info("Client creation succeeded",
 		slog.Int("Status code", http.StatusOK),
-		slog.Group("Client", client.PhoneNumber, client.MobileOperator,
-			client.Tag, client.TimeZone))
+		slog.Group("Client",
+			slog.Int64("PhoneNumber", client.PhoneNumber),
+			slog.Int("MobileOperator", client.MobileOperator),
+			slog.String("Tag", client.Tag),
+			slog.Int("TimeZone", client.TimeZone),
+		),
+	)
+
 	c.Status(http.StatusCreated)
 	pushMetric(http.MethodPut, clientPath, http.StatusCreated)
 }
@@ -99,8 +111,14 @@ func (r *clientRoutes) Patch(c *gin.Context) {
 		slog.Info("Client updating failed",
 			slog.Int("Status code", http.StatusInternalServerError),
 			slog.String("ErrorMsg", err.Error()),
-			slog.Group("Client", client.PhoneNumber, client.MobileOperator,
-				client.Tag, client.TimeZone))
+			slog.Group("Client",
+				slog.Int64("PhoneNumber", client.PhoneNumber),
+				slog.Int("MobileOperator", client.MobileOperator),
+				slog.String("Tag", client.Tag),
+				slog.Int("TimeZone", client.TimeZone),
+			),
+		)
+
 		c.AbortWithStatus(http.StatusInternalServerError)
 		pushMetric(http.MethodPatch, clientPath, http.StatusInternalServerError)
 		return
@@ -108,8 +126,14 @@ func (r *clientRoutes) Patch(c *gin.Context) {
 
 	slog.Info("Client updating succeeded",
 		slog.Int("Status code", http.StatusOK),
-		slog.Group("Client", client.PhoneNumber, client.MobileOperator,
-			client.Tag, client.TimeZone))
+		slog.Group("Client",
+			slog.Int64("PhoneNumber", client.PhoneNumber),
+			slog.Int("MobileOperator", client.MobileOperator),
+			slog.String("Tag", client.Tag),
+			slog.Int("TimeZone", client.TimeZone),
+		),
+	)
+
 	c.Status(http.StatusNoContent)
 	pushMetric(http.MethodPatch, clientPath, http.StatusNoContent)
 }
@@ -143,8 +167,14 @@ func (r *clientRoutes) Delete(c *gin.Context) {
 		slog.Info("Client deletion failed",
 			slog.Int("Status code", http.StatusInternalServerError),
 			slog.String("ErrorMsg", err.Error()),
-			slog.Group("Client", client.PhoneNumber, client.MobileOperator,
-				client.Tag, client.TimeZone))
+			slog.Group("Client",
+				slog.Int64("PhoneNumber", client.PhoneNumber),
+				slog.Int("MobileOperator", client.MobileOperator),
+				slog.String("Tag", client.Tag),
+				slog.Int("TimeZone", client.TimeZone),
+			),
+		)
+
 		c.AbortWithStatus(http.StatusInternalServerError)
 		pushMetric(http.MethodDelete, clientPath, http.StatusInternalServerError)
 		return
@@ -152,8 +182,14 @@ func (r *clientRoutes) Delete(c *gin.Context) {
 
 	slog.Info("Client deletion succeeded",
 		slog.Int("Status code", http.StatusOK),
-		slog.Group("Client", client.PhoneNumber, client.MobileOperator,
-			client.Tag, client.TimeZone))
+		slog.Group("Client",
+			slog.Int64("PhoneNumber", client.PhoneNumber),
+			slog.Int("MobileOperator", client.MobileOperator),
+			slog.String("Tag", client.Tag),
+			slog.Int("TimeZone", client.TimeZone),
+		),
+	)
+
 	c.Status(http.StatusNoContent)
 	pushMetric(http.MethodDelete, clientPath, http.StatusNoContent)
 }

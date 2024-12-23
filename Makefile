@@ -21,7 +21,7 @@ build:
 .PHONY: build
 
 swag-v1:
-	swag init -g internal/transport/http/v1/router.go
+	swag init -g transport/http/v1/router.go --dir ./internal 
 .PHONY: swag-v1
 
 run: swag-v1 build

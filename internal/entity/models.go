@@ -4,6 +4,11 @@ import (
 	"time"
 )
 
+/*
+For future:
+Need to add module with some group solutions to automate `key:value` merge with entities structs
+*/
+
 // Identic with DB
 type Mailing struct {
 	ID             int64     `json:"id"`

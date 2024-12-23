@@ -33,7 +33,7 @@ services:
     - pg-data:/var/lib/postgresql/data
   
   nats:
-    image: nats:2.9
+    image: nats:2.10
     ports:
       - "4222:4222"
 

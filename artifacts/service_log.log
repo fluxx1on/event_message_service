@@ -1,0 +1,24 @@
+[20:09:12.249] [32mINFO:[0m HTTP server started. {
+  "HTTP Address": "127.0.0.1:8080"
+}
+[20:09:12.249] [32mINFO:[0m NATS server started. {
+  "NATS Address": "localhost:4222"
+}
+[20:09:20.611] [32mINFO:[0m Client creation failed {
+  "Client": {
+    "MobileOperator": 900,
+    "PhoneNumber": 78819001121,
+    "Tag": "silver",
+    "TimeZone": 12
+  },
+  "ErrorMsg": "ClientUseCase - Add(): ClientRepo - Create(): ERROR: duplicate key value violates unique constraint \"client_phone_number_key\" (SQLSTATE 23505)",
+  "Status code": 500
+}
+[20:12:14.703] [32mINFO:[0m Server shutting down. All connection will be terminated 
+[20:12:14.703] [31mERROR:[0m Failed to serve {
+  "ErrorMsg": "http: Server closed"
+}
+[20:12:14.703] [32mINFO:[0m HTTP server shutted down 
+[20:12:16.705] [32mINFO:[0m NATS disconnected with timeout 
+[20:12:16.705] [32mINFO:[0m PostgreSQL disconnected 
+[20:12:16.705] [32mINFO:[0m Successfully finished 

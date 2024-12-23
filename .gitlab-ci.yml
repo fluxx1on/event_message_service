@@ -1,31 +1,77 @@
-image: golang:1.21
+image: docker:24.0
 
 stages:
-    - preparation
-    - test
+  - preparation
+  - build
+  - test
+  - deploy
+  - request
 
 variables:
   DOCKER_DRIVER: overlay2
+  GO_VERSION: "1.21"
+  APP_OUTPUT: "app_output.txt"
+  REQUEST_PAYLOAD: '{
+      "mobile_operator_code": 900,
+      "phone_number": 78819001121,
+      "tag": "silver",
+      "time_zone": 12
+    }'
+  REQUEST_URL: "http://localhost:8080/v1/client" 
 
 services:
   - docker:dind
 
-preparation:script:
-  - go version
+before_script:
   - docker --version
+  - apk add --no-cache bash curl
+
+preparation:
+  stage: preparation
+  image: golang:${GO_VERSION}
+  script:
+    - go version
+    - go mod tidy
+    - go mod download
+    - mkdir -p artifacts
+  artifacts:
+    paths:
+      - artifacts/
+
+build:
+  stage: build
+  image: golang:${GO_VERSION}
+  script:
+    - go build -o ./bin/server ./cmd/server
+    - chmod +x ./bin/server
+  artifacts:
+    paths:
+      - bin/server
 
 test:golangci-lint:
-    stage: test
-    image: golangci/golangci-lint:v1.54.2
-    script:
-        - golangci-lint run -v $(go list ./... | grep -v /pkg/)
+  stage: test
+  image: golangci/golangci-lint:v1.54.2
+  script:
+    - golangci-lint run -v $(go list ./... | grep -v /pkg/)
+  tags:
+    - docker
 
 test:unit_tests:
-    stage: test
-    script:
-        - go test -v -race -covermode atomic -coverprofile=coverage.txt ./internal/...
-    artifacts:
+  stage: test
+  image: golang:${GO_VERSION}
+  script:
+    - go test -v -race -covermode atomic -coverprofile=artifacts/coverage.txt ./internal/...
+  artifacts:
     paths:
-        - coverage.txt
-    tags:
-        - docker
+      - artifacts/coverage.txt
+
+deploy:
+  stage: deploy
+  script:
+    - docker compose up --build -d postgres nats app nats-streaming && docker compose logs -f
+    - sleep 5
+
+request:
+  stage: request
+  script:
+    - curl -X PUT -H "Content-Type: application/json" -d "$REQUEST_PAYLOAD" "$REQUEST_URL"

@@ -1,7 +1,7 @@
 env: develop
 Addr: "127.0.0.1:8080"
 logger:
-  logfile: "/service_log.log"
+  logfile: "/artifacts/service_log.log"
   levelInfo: "debug"
 
 nats:
